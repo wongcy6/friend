@@ -1,6 +1,6 @@
 name := "friend"
 
-version := "1.0.6-SNAPSHOT"
+version := "1.0.7-SNAPSHOT"
 
 libraryDependencies ++= Seq(
   jdbc,
