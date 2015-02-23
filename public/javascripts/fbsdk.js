@@ -13,3 +13,24 @@ window.fbAsyncInit = function() {
    js.src = "//connect.facebook.net/en_US/sdk.js";
    fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
+
+
+function checkLoginState() {
+  FB.getLoginStatus(function(response) {
+    statusChangeCallback(response);
+  });
+}
+
+function statusChangeCallback(response) {
+ console.log(response);
+ if (response.status === 'connected') {
+   FB.api('/me', function(me) {
+     console.log(JSON.stringify(me));
+     $("#status").text("Hello " + me.first_name + " email: " + me.email + " " + me.id );
+   });
+ } else if (response.status === 'not_authorized') {
+   $("#status").text("Unauthorized!");
+ } else {
+   $("#status").text("Unknown");
+ }
+}
