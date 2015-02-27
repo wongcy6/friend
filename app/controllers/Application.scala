@@ -11,6 +11,6 @@ object Application extends Controller {
   }
 
   def list = Action {
-    Ok(Json.toJson(Map("name" -> "Isabella", "Gender" -> "female")))
+    Ok(Json.toJson(Map("name" -> "Isabella", "Gender" -> "Dog")))
   }
 }
