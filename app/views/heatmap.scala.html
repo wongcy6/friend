@@ -42,7 +42,7 @@
 
     google.maps.event.addDomListener(window, 'load', initialize);
 
-    var ws = new WebSocket("ws://localhost:9000/ws");
+    var ws = new WebSocket('ws://' + document.location.hostname + ':' + document.location.port + '/ws');
     ws.onmessage = function (evt)
     {
       var response = evt.data;
