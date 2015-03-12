@@ -46,7 +46,7 @@ object Application extends Controller {
     val out = Enumerator.generateM [String] {
       val ipString = "%d.%d.%d.%d".format(random.nextInt(255)+1, random.nextInt(255)+1, random.nextInt(255)+1, random.nextInt(255)+1)
       val json = Json.toJson(Map("ip" -> ipString, "speed" -> (Math.abs(random.nextGaussian()) * 10).toString)).toString()
-      Promise.timeout(Some(json), Duration(5000, "millis"))
+      Promise.timeout(Some(json), Duration(2000, "millis"))
     }
 
     (in, out)

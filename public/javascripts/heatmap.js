@@ -21,6 +21,35 @@ function getWebSocketServerUrl() {
 google.maps.event.addDomListener(window, 'load', initialize);
 
 
+function getColor(speed) {
+  if (speed > 10) {
+     return "red"
+  } else if (speed > 5) {
+     return "yellow"
+  } else {
+     return "green"
+  }
+}
+
+function stopAnimiation(marker) {
+    setTimeout(function () {
+          marker.setAnimation(null);
+        }, 2000);
+}
+
+function fadeAndRemoveMarker(marker) {
+
+    var interval = setInterval(function () {
+      marker.setOpacity(Math.max(0, marker.getOpacity() - 0.1));
+    }, 10000);
+
+    setTimeout(function () {
+      clearInterval(interval);
+      marker.setMap(null);
+    }, 60000);
+}
+
+
 // Start the WebSocket
 var ws = new WebSocket(getWebSocketServerUrl());
 
@@ -38,19 +67,17 @@ ws.onmessage = function (evt)
             map: map,
             animation: google.maps.Animation.BOUNCE,
             title: data.city,
-            opacity: 1.0
+            opacity: 1.0,
+            icon: {
+                path: google.maps.SymbolPath.CIRCLE,
+                strokeColor: getColor(response.speed),
+                scale: 5
+            },
           });
         map.panTo(latlong);
-        setTimeout(function () {
-          marker.setAnimation(null);
-        }, 6000);
-        var interval = setInterval(function () {
-          marker.setOpacity(Math.max(0, marker.getOpacity() - 0.1));
-        }, 1000);
-        setTimeout(function () {
-          clearInterval(interval);
-          marker.setMap(null);
-        }, 60000);
+
+        stopAnimiation(marker);
+        fadeAndRemoveMarker(marker);
       })
 })();
 };
