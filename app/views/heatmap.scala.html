@@ -45,12 +45,12 @@
     var ws = new WebSocket('ws' +
          (document.location.protocol === 'https:' ? 's' : '') +
          '://' + document.location.hostname + ':' + document.location.port + '/ws');
-         
+
     ws.onmessage = function (evt)
     {
       var response = evt.data;
       (function() {
-      var iplookupUrl = "http://freegeoip.net/json/" + response;
+      var iplookupUrl = "//freegeoip.net/json/" + response;
       $.getJSON(iplookupUrl)
         .done( function( data ) {
             var latlong = new google.maps.LatLng(data.latitude, data.longitude);
@@ -65,10 +65,11 @@
             setTimeout(function () {
               marker.setAnimation(null);
             }, 6000);
-            setInterval(function () {
+            var interval = setInterval(function () {
               marker.setOpacity(Math.max(0, marker.getOpacity() - 0.1));
             }, 1000);
             setTimeout(function () {
+              clearInterval(interval);
               marker.setMap(null);
             }, 60000);
           })
