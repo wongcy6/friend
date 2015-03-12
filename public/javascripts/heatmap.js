@@ -1,21 +1,28 @@
+//
+// Initialize the base map
+//
 var map;
 
 function initialize() {
   var mapOptions = {
-    zoom: 2,
-    center: new google.maps.LatLng(0, 150),
+    zoom: 2,                                    // Zoom level that shows the whole world
+    center: new google.maps.LatLng(0, 150),     // In the middle of Pacific Ocean
   };
+  map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+}
 
-  map = new google.maps.Map(document.getElementById('map-canvas'),
-      mapOptions);
-
+// This code assumes the WebSocket is hosted on the same server/port
+// With the path of "/ws"
+function getWebSocketServerUrl() {
+   return ('ws' + (document.location.protocol === 'https:' ? 's' : '') +  '://' +
+          document.location.hostname + ':' + document.location.port + '/ws');
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
 
-var ws = new WebSocket('ws' +
-     (document.location.protocol === 'https:' ? 's' : '') +
-     '://' + document.location.hostname + ':' + document.location.port + '/ws');
+
+// Start the WebSocket
+var ws = new WebSocket(getWebSocketServerUrl());
 
 ws.onmessage = function (evt)
 {
@@ -47,3 +54,5 @@ ws.onmessage = function (evt)
       })
 })();
 };
+
+
