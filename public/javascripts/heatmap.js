@@ -22,12 +22,14 @@ google.maps.event.addDomListener(window, 'load', initialize);
 
 
 function getColor(speed) {
-  if (speed > 10) {
-     return "red"
-  } else if (speed > 5) {
-     return "yellow"
+  if (speed > 15000) {
+     return "red";
+  } else if (speed > 10000) {
+     return '#' + (0xFFFF00 - Math.round((speed - 10000)/1000) * 0x003300).toString(16);
+  } else if (speed > 5000) {
+     return '#' + (0x00FF00 + Math.round((speed - 5000)/1000) * 0x32CD00).toString(16);
   } else {
-     return "green"
+     return "green";
   }
 }
 
@@ -52,34 +54,33 @@ function fadeAndRemoveMarker(marker) {
 
 // Start the WebSocket
 var ws = new WebSocket(getWebSocketServerUrl());
+var count = 0;
 
 ws.onmessage = function (evt)
 {
+  count = count + 1;
+  if (count > 240) debugger;
   var response = JSON.parse(evt.data);
+  $("#panel").text(count + ' ' + new Date(response.time/1));
 
-  (function() {
-  var iplookupUrl = '//freegeoip.net/json/' + response.ip;
-  $.getJSON(iplookupUrl)
-    .done( function( data ) {
-        var latlong = new google.maps.LatLng(data.latitude, data.longitude);
-        var marker = new google.maps.Marker({
-            position: latlong,
-            map: map,
-            animation: google.maps.Animation.BOUNCE,
-            title: data.city,
-            opacity: 1.0,
-            icon: {
-                path: google.maps.SymbolPath.CIRCLE,
-                strokeColor: getColor(response.speed),
-                scale: 5
-            },
-          });
-        map.panTo(latlong);
-
-        stopAnimiation(marker);
-        fadeAndRemoveMarker(marker);
-      })
-})();
-};
+  var latlong = new google.maps.LatLng(response.latitude, response.longitude);
+  var marker = new google.maps.Marker({
+        position: latlong,
+        map: map,
+        animation: google.maps.Animation.DROP,
+        opacity: 1.0,
+        icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            strokeColor: getColor(response.pageload),
+            scale: 3
+        }
+     });
+//        map.panTo(latlong);
 
 
+   stopAnimiation(marker);
+   fadeAndRemoveMarker(marker);
+
+   //console.log("dads")
+
+}
